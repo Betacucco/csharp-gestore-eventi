@@ -12,15 +12,15 @@ namespace GestoreEventi
         private string titolo;
         private DateTime dataEvento;
         private int capienzaMaxEvento;
-        private int numeroPostiPrenotati = 0;
+        private int numeroPostiPrenotati;
 
         //COSTRUTTORE
-        public Evento(string titolo, DateTime dataEvento, int capienzaMaxEvento, int numeroPostiPrenotati)
+        public Evento(string titolo, DateTime dataEvento, int capienzaMaxEvento)
         {
             SetTitolo(titolo);
             SetDataEvento(dataEvento);
             this.capienzaMaxEvento = capienzaMaxEvento;
-            this.numeroPostiPrenotati = numeroPostiPrenotati;
+            this.numeroPostiPrenotati = 0;
         }
 
         //GETTERS
@@ -102,10 +102,9 @@ namespace GestoreEventi
         {
             string rappresentazioneInStringa = "";
 
-            rappresentazioneInStringa += "---- Evento ---- \n";
-            rappresentazioneInStringa += "Titolo evento: " + this.titolo;
+            rappresentazioneInStringa += "Data Evento: " + this.dataEvento.ToString("dd/MM/yyyy");
             rappresentazioneInStringa += " - ";
-            rappresentazioneInStringa += "Data Evento: " + this.dataEvento.ToString("dd/MM/yyyy")+ "\n";
+            rappresentazioneInStringa += "Titolo evento: " + this.titolo + "\n";
 
             return rappresentazioneInStringa;
         }
