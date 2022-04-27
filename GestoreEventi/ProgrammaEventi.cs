@@ -14,59 +14,64 @@ namespace GestoreEventi
         private List<Evento> eventi;
 
         //COSTRUTTORE
-        public ProgrammaEventi(string titolo, List<Evento> eventi)
+        public ProgrammaEventi(string titolo)
         {
-            this.titolo = titolo;   
-            this.eventi = eventi;            
+            this.titolo = titolo;
+            eventi = new List<Evento>();            
         }
 
         //GET
-        public string GetTitolo()
+        public string GetTitoloProgramma()
         {
             return titolo;
         }
 
         //AGGIUNGI EVENTI ALLA LISTA
-        public List<Evento> AggiungiEventi()
+        public void AggiungiEventi(Evento evento)
         {
-            foreach(Evento events in eventi)
-            {
-                this.eventi.Add(events);
-            }
-
-            return this.eventi;
+            eventi.Add(evento);
         }
 
         //STAMPA EVENTI CHE HANNO LO STESSO GIORNO NELLA LISTA 
-        public void StampaEventiGiornalieri(DateTime dataDaControllare)
+        public List<Evento> EventiInData(DateTime dataDaControllare)
         {
-            foreach (Evento events in this.eventi)
+            List<Evento> eventiSelezionati = new List<Evento>();
+            foreach (Evento evento in this.eventi)
             {
-                if(events.GetDataEvento() == dataDaControllare)
+                if(evento.GetDataEvento() == dataDaControllare)
                 {                   
-                    Console.WriteLine(events.ToString());
+                    eventiSelezionati.Add(evento);
                 }
             }
+            return eventiSelezionati;
         }
 
-        public void Stampa()
+        //STAMPA LA LISTA CON DATA ED EVENTO
+        public static string StampaListaEventi(List<Evento> listaEventi)
         {
-            int lunghezzaList = LunghezzaLista();
-            Console.WriteLine("Il numero di eventi e': " + lunghezzaList);
-            Console.WriteLine("Ecco il tuo programma eventi: ");
-            Console.WriteLine(this.titolo);
-            foreach(Evento events in this.eventi)
+            string rappresentazione = "";
+            foreach(Evento evento in listaEventi)
             {
-                Console.Write("\t" + events.GetDataEvento().ToString("dd/MM/yyyy"));
-                Console.Write(" - ");
-                Console.WriteLine(events.GetTitolo());
+                rappresentazione += evento.ToString() + "\n";
             }
+            return rappresentazione;
         }
 
+        //Restituisce la lista di eventi
+        public string ListaEventiInStringa()
+        {
+            string stringaOutput = this.titolo + "\n";
+            foreach (Evento evento in eventi) 
+            {
+                stringaOutput += "\t" + evento.ToString() + "\n";
+            }
+            return stringaOutput;
+        }
+
+        //RESTITUISCE LA LUNGHEZZA DELLA LISTA
         public int LunghezzaLista()
         {
-            int lunghezzaDellaLista = this.eventi.Count;
-            return lunghezzaDellaLista;
+            return eventi.Count;
         }
 
         //SVUOTA LA LISTA

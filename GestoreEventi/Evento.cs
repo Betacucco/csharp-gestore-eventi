@@ -19,11 +19,16 @@ namespace GestoreEventi
         {
             SetTitolo(titolo);
             SetDataEvento(dataEvento);
-            this.capienzaMaxEvento = capienzaMaxEvento;
             this.numeroPostiPrenotati = 0;
+            if (capienzaMaxEvento < 1)
+            {
+                throw new Exception("La capienza non puo' essere 0 o negativa!");
+            }
+            this.capienzaMaxEvento = capienzaMaxEvento;
+
         }
 
-        //GETTERS
+        //-----------------GETTERS--------------------
         public string GetTitolo()
         {
             return titolo;
@@ -36,7 +41,7 @@ namespace GestoreEventi
 
         public int GetCapienzaMaxEvento()
         {
-            return capienzaMaxEvento;   
+            return capienzaMaxEvento;
         }
 
         public int GetNumeroPostiPrenotati()
@@ -45,10 +50,10 @@ namespace GestoreEventi
         }
         //---------------------------------------------
 
-        //SETTERS
+        //-------------SETTERS---------------------
         public void SetTitolo(string titolo)
         {
-            if (string.IsNullOrEmpty(titolo))
+            if (titolo == null)
             {
                 throw new ArgumentNullException("Titolo non inserito!");
             }
@@ -57,7 +62,7 @@ namespace GestoreEventi
                 this.titolo = titolo;
             }
         }
-        
+
         public void SetDataEvento(DateTime data)
         {
             if (data <= DateTime.Now)
@@ -69,32 +74,44 @@ namespace GestoreEventi
                 this.dataEvento = data;
             }
         }
-        //---------------------------------------------------
+        //------------------------------------
+
+        //Restituisce il numero di posti disponibili
+        public int PostiDisponibili()
+        {
+            return this.capienzaMaxEvento - this.numeroPostiPrenotati;
+        }
 
         //Metodo per aggiungere posti
-        public int PrenotaPosti(int postiDaAggiugnere)
+        public void PrenotaPosti(int posti)
         {
-            if (this.numeroPostiPrenotati >= this.capienzaMaxEvento || this.dataEvento <= DateTime.Now)
+            if (numeroPostiPrenotati + posti > capienzaMaxEvento)
             {
-                throw new Exception("I posti sono finiti o la data e' sbagliata!");
-            } else
-            {
-                this.numeroPostiPrenotati += postiDaAggiugnere;
-                return this.numeroPostiPrenotati;
+                throw new Exception("Non posso prenotare tutti questi posti");
             }
+
+            if (this.dataEvento < DateTime.Now)
+            {
+                throw new Exception("L'evento è già passato");
+            }
+
+            numeroPostiPrenotati += posti;
         }
 
         //Metodo per togliere posti
-        public int DisdiciPosti(int postiDaTogliere)
+        public void DidisciPosti(int posti)
         {
-            if (this.numeroPostiPrenotati > 0 || this.dataEvento > DateTime.Now)
+            if (numeroPostiPrenotati - posti <= 0)
             {
-                this.numeroPostiPrenotati -= postiDaTogliere;
-                return this.numeroPostiPrenotati;
-            } else
-            {
-                throw new Exception("Non puoi togliere posti perche' non ci sono o la data e' sbagliata!");
+                throw new Exception("Non posso disdire tutti questi posti");
             }
+
+            if (dataEvento < DateTime.Now)
+            {
+                throw new Exception("L'evento è già passato");
+            }
+
+            numeroPostiPrenotati -= posti;
         }
 
         //Override del metodo toString per stampare ogni appuntamento in lista
@@ -102,9 +119,9 @@ namespace GestoreEventi
         {
             string rappresentazioneInStringa = "";
 
-            rappresentazioneInStringa += "Data Evento: " + this.dataEvento.ToString("dd/MM/yyyy");
+            rappresentazioneInStringa += this.dataEvento.ToString("dd/MM/yyyy");
             rappresentazioneInStringa += " - ";
-            rappresentazioneInStringa += "Titolo evento: " + this.titolo + "\n";
+            rappresentazioneInStringa += this.titolo + "\n";
 
             return rappresentazioneInStringa;
         }
